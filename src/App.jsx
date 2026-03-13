@@ -2,6 +2,16 @@ import { useState } from "react";
 import IndicatorCard from "./components/IndicatorCard";
 import SignalCard from "./components/SignalCard";
 import BreakdownCard from "./components/BreakdownCard";
+import {
+  getVixScore,
+  getPutCallScore,
+  getBreadthScore,
+  getTrendScore,
+  computeSignal,
+  signalColor,
+  scoreColor,
+  scoreLabel,
+} from "./lib/marketSignals";
 
 function App() {
   const [vix, setVix] = useState(25);
@@ -9,58 +19,10 @@ function App() {
   const [breadth, setBreadth] = useState(50);
   const [spTrend, setSpTrend] = useState("down");
 
-  function getVixScore() {
-    if (vix < 20) return 1;
-    if (vix > 30) return -1;
-    return 0;
-  }
-
-  function getPutCallScore() {
-    if (putCall < 0.8) return 1;
-    if (putCall > 1.1) return -1;
-    return 0;
-  }
-
-  function getBreadthScore() {
-    if (breadth > 60) return 1;
-    if (breadth < 40) return -1;
-    return 0;
-  }
-
-  function getTrendScore() {
-    if (spTrend === "up") return 1;
-    if (spTrend === "down") return -1;
-    return 0;
-  }
-
-  function computeSignal(score) {
-    if (score >= 2) return "RISK ON";
-    if (score <= -2) return "DEFENSIVE";
-    return "CAUTION";
-  }
-
-  function signalColor(signal) {
-    if (signal === "RISK ON") return "text-green-400";
-    if (signal === "DEFENSIVE") return "text-red-400";
-    return "text-yellow-400";
-  }
-
-  function scoreColor(value) {
-    if (value > 0) return "text-green-400";
-    if (value < 0) return "text-red-400";
-    return "text-slate-400";
-  }
-
-  function scoreLabel(value) {
-    if (value > 0) return "+1";
-    if (value < 0) return "-1";
-    return "0";
-  }
-
-  const vixScore = getVixScore();
-  const putCallScore = getPutCallScore();
-  const breadthScore = getBreadthScore();
-  const trendScore = getTrendScore();
+  const vixScore = getVixScore(vix);
+  const putCallScore = getPutCallScore(putCall);
+  const breadthScore = getBreadthScore(breadth);
+  const trendScore = getTrendScore(spTrend);
 
   const score = vixScore + putCallScore + breadthScore + trendScore;
   const signal = computeSignal(score);
