@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import IndicatorCard from "./components/IndicatorCard";
+import SignalCard from "./components/SignalCard";
+import BreakdownCard from "./components/BreakdownCard";
 
 function App() {
   const [vix, setVix] = useState(25);
@@ -66,121 +68,53 @@ function App() {
   return (
     <main className="min-h-screen bg-slate-950 text-white flex flex-col justify-center items-center p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
-        <Card>
-          <CardHeader>
-            <CardTitle>VIX</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-slate-300">Current: {vix}</p>
-            <input
-              type="number"
-              value={vix}
-              onChange={(e) => setVix(Number(e.target.value))}
-              className="w-full rounded bg-slate-800 border border-slate-700 px-3 py-2"
-            />
-            <p className="text-xs text-slate-500">{"< 20 = +1, > 30 = -1"}</p>
-          </CardContent>
-        </Card>
+        <IndicatorCard
+          title="VIX"
+          label="Current"
+          value={vix}
+          onChange={setVix}
+          ruleText="< 20 = +1, > 30 = -1"
+        />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Put / Call Ratio</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-slate-300">Current: {putCall}</p>
-            <input
-              type="number"
-              step="0.1"
-              value={putCall}
-              onChange={(e) => setPutCall(Number(e.target.value))}
-              className="w-full rounded bg-slate-800 border border-slate-700 px-3 py-2"
-            />
-            <p className="text-xs text-slate-500">{"< 0.8 = +1, > 1.1 = -1"}</p>
-          </CardContent>
-        </Card>
+        <IndicatorCard
+          title="Put / Call Ratio"
+          label="Current"
+          value={putCall}
+          onChange={setPutCall}
+          step="0.1"
+          ruleText="< 0.8 = +1, > 1.1 = -1"
+        />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Market Breadth</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-slate-300">Current: {breadth}</p>
-            <input
-              type="number"
-              value={breadth}
-              onChange={(e) => setBreadth(Number(e.target.value))}
-              className="w-full rounded bg-slate-800 border border-slate-700 px-3 py-2"
-            />
-            <p className="text-xs text-slate-500">{"> 60 = +1, < 40 = -1"}</p>
-          </CardContent>
-        </Card>
+        <IndicatorCard
+          title="Market Breadth"
+          label="Current"
+          value={breadth}
+          onChange={setBreadth}
+          ruleText="> 60 = +1, < 40 = -1"
+        />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>S&amp;P Trend</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-slate-300">Trend: {spTrend}</p>
-            <select
-              value={spTrend}
-              onChange={(e) => setSpTrend(e.target.value)}
-              className="w-full rounded bg-slate-800 border border-slate-700 px-3 py-2"
-            >
-              <option value="up">up</option>
-              <option value="down">down</option>
-              <option value="flat">flat</option>
-            </select>
-            <p className="text-xs text-slate-500">
-              {"up = +1, down = -1, flat = 0"}
-            </p>
-          </CardContent>
-        </Card>
+        <IndicatorCard
+          title="S&P Trend"
+          label="Trend"
+          value={spTrend}
+          onChange={setSpTrend}
+          type="select"
+          options={["up", "down", "flat"]}
+          ruleText="up = +1, down = -1, flat = 0"
+        />
       </div>
 
       <div className="mt-10 w-full max-w-3xl space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Market Signal</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <p className={`text-2xl font-bold ${signalColor(signal)}`}>
-              {signal}
-            </p>
-            <p className="text-slate-400">Score: {score}</p>
-          </CardContent>
-        </Card>
+        <SignalCard signal={signal} score={score} signalColor={signalColor} />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Score Breakdown</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-slate-300">
-            <p>
-              VIX:{" "}
-              <span className={scoreColor(vixScore)}>
-                {scoreLabel(vixScore)}
-              </span>
-            </p>
-            <p>
-              Put / Call:{" "}
-              <span className={scoreColor(putCallScore)}>
-                {scoreLabel(putCallScore)}
-              </span>
-            </p>
-            <p>
-              Breadth:{" "}
-              <span className={scoreColor(breadthScore)}>
-                {scoreLabel(breadthScore)}
-              </span>
-            </p>
-            <p>
-              S&amp;P Trend:{" "}
-              <span className={scoreColor(trendScore)}>
-                {scoreLabel(trendScore)}
-              </span>
-            </p>
-          </CardContent>
-        </Card>
+        <BreakdownCard
+          vixScore={vixScore}
+          putCallScore={putCallScore}
+          breadthScore={breadthScore}
+          trendScore={trendScore}
+          scoreColor={scoreColor}
+          scoreLabel={scoreLabel}
+        />
       </div>
     </main>
   );
